@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+    stages{
+        stage('Build') {
+            steps {
+                // Get some code from a GitHub repository
+                git url: 'https://github.com/iamigui/devsecops-jenkins-deploy-flask.git', branch: 'main'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                // Instalar las dependencias del proyecto (por ejemplo, utilizando pip)
+                sh 'pip install -r requirements.txt'
+            }
+        }
+	stage('Snyk Test') {
+	    steps {
+                script {
+        	       sh 'sudo snyk code test --fail-fast --all-projects --html /var/lib/jenkins/workspace/snyk-fastapi/ > snyk-fastapi.txt'
+                }
+            }
+	    }
+    }
+}

@@ -1,0 +1,18 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Upload to S3') {
+            steps {
+                script {
+                    def currentTime = new Date().format('dd-MM-yyyy_HH-mm-ss') // Obtiene la hora actual en el formato deseado
+                    def fileName = "snyk-flask-${currentTime}.txt" // Concatena la hora actual al nombre del archivo
+
+                    withAWS(credentials: 'aws-proyecto-credentials') {
+                        s3Upload(file: "/var/lib/jenkins/workspace/snyk-flask/snyk-flask.txt", bucket: 'snykproyecto', path: "testing/${fileName}")
+                    }
+                }
+            }
+        }
+    }
+}

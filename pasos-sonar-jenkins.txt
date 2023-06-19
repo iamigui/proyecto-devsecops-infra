@@ -1,0 +1,33 @@
+#Instalar sonar-scanner
+curl -O https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472.zip
+unzip sonar-scanner-cli-4.6.2.2472.zip
+sudo mv sonar-scanner-4.6.2.2472 /opt/sonar-scanner
+export PATH="/opt/sonar-scanner/bin:$PATH"
+export SONAR_SCANNER_HOME="/opt/sonar-scanner"
+source ~/.bashrc
+
+# Creamos el archivo sonar-project.properties y le añadimos lo siguiente:
+sonar.sourceEncoding=utf-8
+sonar.projectKey=fastapi
+sonar.projectName=sonar
+sonar.language=py
+sonar.python.coverage.reportPaths=coverage.xml
+sonar.python.pylint.reportPaths=pylint-report.txt
+sonar.python.bandit.reportPaths=bandit-report.json
+sonar.python.xunit.reportPaths=tests-reports/xunit.xml
+
+
+# Tras instalar sonar-scanner hacemos la configuración de SonarScanner en Jenkins (la parte del directorio de Jenkins hacemos un comando para
+que nos de donde esta la ruta de sonar-scanner: which sonar-scanner)
+
+# Finalmente antes de correr la pipeline tenemos que estar seguros de que el usuario Jenkins es admin de la carpeta (comando añadido en el jenkins.sh)
+
+#Update kubeconfig
+sudo aws eks update-kubeconfig --region us-east-1 --name infra-dev-eksproyecto
+
+# Configurar snyk
+snyk auth <SNYK_TOKEN>
+
+#Configurar docker
+sudo usermod -aG docker $USER
+sudo chmod 666 /var/run/docker.sock

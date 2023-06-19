@@ -1,0 +1,32 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                // Get some code from a GitHub repository
+                git url: 'https://github.com/iamigui/devsecops-jenkins-deploy-flask.git', branch: 'main'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                // Instalar las dependencias del proyecto (por ejemplo, utilizando pip)
+                sh 'pip install -r requirements.txt'
+            }
+        }
+        
+        stage('SonarQube Analysis') {
+          steps {
+            // Configurar SonarQube
+            script {
+            def scannerHome = tool 'SonarScanner' // esto es el nombre de la herramienta (Jenkins Tools)
+            }
+            withSonarQubeEnv('SonarServer') {  // en los parentesis hay que poner el nombre de la configuración de sistema del servidor
+                // Ejecutar el análisis del proyecto con SonarScanner
+                sh '''/opt/sonar-scanner/bin/sonar-scanner -Dsonar.projectKey=sonarflask -Dsonar.sources=. -Dsonar.host.url=http://<SonarQube Server IP>:9000/ -Dsonar.projectName=flask'''
+                }
+            }
+        }
+    }
+}
