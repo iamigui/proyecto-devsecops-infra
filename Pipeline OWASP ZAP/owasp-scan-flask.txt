@@ -129,11 +129,20 @@ def scan_type
             '''
         }
     }
+    post {
+        always {
+            echo "Removing container"
+            sh '''
+                docker stop owasp
+                docker rm owasp
+            '''
+        }
+
         success {
             echo 'Slack Notifications.'
             slackSend channel: '#testing-de-software',
                 color: COLOR_MAP[currentBuild.currentResult],
                 message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
         }
-
+    }
 }
