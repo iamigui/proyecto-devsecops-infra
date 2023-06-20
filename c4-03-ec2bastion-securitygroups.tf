@@ -16,7 +16,21 @@ module "public_bastion_sg" {
       protocol    = "tcp"
       description = "Jenkins Port"
       cidr_blocks = "0.0.0.0/0"
-    }
+    },
+    {
+      from_port   = 9000
+      to_port     = 9000
+      protocol    = "tcp"
+      description = "SonarQube"
+      cidr_blocks = "0.0.0.0/0"
+    },
+    {
+      from_port   = 80
+      to_port     = 80
+      protocol    = "tcp"
+      description = "SonarQube Server"
+      cidr_blocks = "0.0.0.0/0"
+    }    
   ]
   egress_rules = ["all-all"]
   tags = {
